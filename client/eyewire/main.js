@@ -279,18 +279,24 @@ function getImagesForVolXY(volId, chunk, axis, type, callback) {
   });
 }
 
+var channelCanvas;
+var bufferCanvas;
 
-// initialize canvases
-var channelCanvas = document.getElementById("channelCanvas");
-var bufferCanvas = document.getElementById("bufferCanvas");
-
-// prevents dragging the 2d view image
-channelCanvas.onselectstart = function () { return false; };
-
-setContexts(
-  channelCanvas.getContext("2d"),
-  bufferCanvas.getContext("2d")
-);
+function init() {
+  // initialize canvases
+  channelCanvas = document.getElementById("channelCanvas");
+  console.log("doc: ", document.getElementById("channelCanvas"));
+  console.log("jquery: ", $("#channelCanvas"));
+  bufferCanvas = document.getElementById("bufferCanvas");
+  
+  // prevents dragging the 2d view image
+  channelCanvas.onselectstart = function () { return false; };
+  
+  setContexts(
+    channelCanvas.getContext("2d"),
+    bufferCanvas.getContext("2d")
+  );
+}
 
 var mouseX = 0, mouseY = 0;
 
@@ -329,18 +335,22 @@ function register2dInteractions() {
 
 var meshes = {};
 
-var renderer = new THREE.WebGLRenderer({
-  antialias: true,
-  preserveDrawingBuffer: true,
-  alpha: false,
-});
-renderer.setDepthTest(false);
-scene = new THREE.Scene();
-setScene();
-var threeDContainer = $('#3dContainer');
+var renderer, threeDContainer;
 
-renderer.setSize(threeDContainer.width(), threeDContainer.height());
-threeDContainer.html(renderer.domElement);
+function init3d() {
+  renderer = new THREE.WebGLRenderer({
+    antialias: true,
+    preserveDrawingBuffer: true,
+    alpha: false,
+  });
+  renderer.setDepthTest(false);
+  scene = new THREE.Scene();
+  setScene();
+  threeDContainer = $('#3dContainer');
+  
+  renderer.setSize(threeDContainer.width(), threeDContainer.height());
+  threeDContainer.html(renderer.domElement);
+}
 
 // THREEJS objects
 var scene, camera, light, segments, cube, center, plane;
@@ -395,31 +405,33 @@ function setScene() {
   scene.add(camera);
 }
 
-$("#3dContainer canvas").mousemove(function (e) {
-  var jThis = $(this);
-  var parentOffset = jThis.offset();
-  var relX = e.pageX - parentOffset.left;
-  var relY = e.pageY - parentOffset.top;
-
-  mouseX = relX / jThis.width() - 0.5;
-  mouseY = relY / jThis.height() - 0.5;
-});
-
 
 // flags for energy efficiency
 var animating = false;
 var canvasHasFocus = false;
 
-$("#3dContainer canvas").mouseenter(function (e) {
-  canvasHasFocus = true;
-  if (!animating) {
-    animating = true;
-    requestAnimationFrame(animate);
-  }
-})
-.mouseout(function () {
-  canvasHasFocus = false;
-});
+function initCanvas() {
+  $("#3dContainer canvas").mousemove(function (e) {
+    var jThis = $(this);
+    var parentOffset = jThis.offset();
+    var relX = e.pageX - parentOffset.left;
+    var relY = e.pageY - parentOffset.top;
+  
+    mouseX = relX / jThis.width() - 0.5;
+    mouseY = relY / jThis.height() - 0.5;
+  });
+  
+  $("#3dContainer canvas").mouseenter(function (e) {
+    canvasHasFocus = true;
+    if (!animating) {
+      animating = true;
+      requestAnimationFrame(animate);
+    }
+  })
+  .mouseout(function () {
+    canvasHasFocus = false;
+  });
+}
 
 // rotates the cube based on mouse position
 function animate() {
@@ -643,6 +655,12 @@ function playTask(task) {
 }
 
 function start() {
+  console.log("starting");
+  init();
+  init3d();
+  initCanvas();
   $.post('https://beta.eyewire.org/2.0/tasks/testassign').done(playTask);
 }
-start();
+
+
+Meteor.startup(start);
