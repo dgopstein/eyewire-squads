@@ -18,7 +18,7 @@
       </header>
       
       <div class="discussion">
-        <ol class="discussion">
+        <ol class="discussion message-list">
 
           {{#each messages}}
             <li class="other">
@@ -27,6 +27,11 @@
                 <time datetime="2009-11-13T20:00">{{name}} Neuron<!-- • 51 min--></time>
               </div>
             </li>
+            <script>
+              <!-- stay scrolled to bottom -->
+              $(".message-list").scrollTop($(".message-list")[0].scrollHeight);
+              console.log("scroolHeight", $(".message-list")[0].scrollHeight);
+            </script>
           {{/each}}
           <!--
           <li class="other">

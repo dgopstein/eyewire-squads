@@ -24,7 +24,8 @@ Template.input.events = {
       var message = document.getElementById('message');
 
       if (message.value != '') {
-        Session.set('nMessages', (Session.get('nMessages') || nMessageDefault) + 1);
+        Session.set('nMessages', (Session.get('nMessages') || nMessageDefault) + 1); // set the number of messages to display
+
         Messages.insert({
           name: name,
           message: message.value,

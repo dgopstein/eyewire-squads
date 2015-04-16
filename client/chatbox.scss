@@ -54,7 +54,7 @@
   height: 100%;
   .chatdiv {
     // force to bottom of screen
-    position:absolute;
+    position: fixed;
     bottom: 0;
 
     right: 20px; // force to right side
@@ -67,7 +67,7 @@
   margin: 0;
   padding: 0 0 0 0;
   ol {
-    overflow-y: scroll; // let message scroll off the top
+    overflow-y: auto; // let message scroll off the top
     height: 300px;
   }
   li {
