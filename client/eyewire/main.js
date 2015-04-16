@@ -255,7 +255,7 @@ function getStartingTiles(realTileNum, bundleSize, volId, chunk, axis, type, cal
   var chunkZ = Math.floor(realTileNum / CHUNK_SIZE);
   var start = clamp(chunkTile - Math.floor(bundleSize / 2), 0, CHUNK_SIZE - bundleSize);
   var range = [start, start + bundleSize];
-  var url = "http://cache.eyewire.org/volume/" + volId + "/chunk/0/" + chunk[0] + "/" + chunk[1] + "/" + chunkZ + "/tile/" + axis + "/" + range[0] + ":" + range[1];
+  var url = "https://cache.eyewire.org/volume/" + volId + "/chunk/0/" + chunk[0] + "/" + chunk[1] + "/" + chunkZ + "/tile/" + axis + "/" + range[0] + ":" + range[1];
 
   $.get(url).done(function (tilesRes) {
     for (var trIdx = 0; trIdx < tilesRes.length; trIdx++) {
@@ -269,7 +269,7 @@ function getStartingTiles(realTileNum, bundleSize, volId, chunk, axis, type, cal
 // load all the tiles for the given axis in the given chunk of the given type
 // ex. load all the segmentation tiles in chunk (0, 0, 0) for the 'z' axis (x/y plane)
 function getImagesForVolXY(volId, chunk, axis, type, callback) {
-  var url = "http://cache.eyewire.org/volume/" + volId + "/chunk/0/" + chunk[0] + "/" + chunk[1] + "/" + chunk[2] + "/tile/" + axis + "/" + 0 + ":" + CHUNK_SIZE;
+  var url = "https://cache.eyewire.org/volume/" + volId + "/chunk/0/" + chunk[0] + "/" + chunk[1] + "/" + chunk[2] + "/tile/" + axis + "/" + 0 + ":" + CHUNK_SIZE;
   $.get(url).done(function (tilesRes) {
     for (var trIdx = 0; trIdx < tilesRes.length; trIdx++) {
       var realTileNum = chunk[2] * CHUNK_SIZE + trIdx;
@@ -521,7 +521,7 @@ function displayMeshForVolumeAndSegId(volume, segId, done) {
 // loads the VOA mesh for the given segment in the given chunk from the EyeWire data server into a Three JS mesh.
 // passes the mesh to the done handler as a single argument or passes false if there is no mesh for the given segment in the chunk
 function getMeshForVolumeXYZAndSegId(volume, chunk, segId, done) {
-  var meshUrl = 'http://cache.eyewire.org/volume/' + volume + '/chunk/0/'+ chunk[0] + '/' + chunk[1] + '/' + chunk[2] + '/mesh/' + segId;
+  var meshUrl = 'https://cache.eyewire.org/volume/' + volume + '/chunk/0/'+ chunk[0] + '/' + chunk[1] + '/' + chunk[2] + '/mesh/' + segId;
 
   var req = new XMLHttpRequest();
   req.open("GET", meshUrl, true);
