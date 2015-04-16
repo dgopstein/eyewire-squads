@@ -1,10 +1,17 @@
 /**
 * Templates
 */
-Template.messages.helpers({
+
+var nMessageDefault = 3;
+
+Template.chatbox.helpers({
     messages: function() {
-        return Messages.find({}, { sort: { time: -1}});
+        var lim = Session.get('nMessages') || nMessageDefault;
+        var msgs = Messages.find({}, { sort: { time: -1}, limit: lim }).fetch().reverse();
+        return msgs;
     }
+
+
 })
 
 Template.input.events = {
@@ -17,6 +24,7 @@ Template.input.events = {
       var message = document.getElementById('message');
 
       if (message.value != '') {
+        Session.set('nMessages', (Session.get('nMessages') || nMessageDefault) + 1);
         Messages.insert({
           name: name,
           message: message.value,

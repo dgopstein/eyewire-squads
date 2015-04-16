@@ -49,11 +49,27 @@
   }
 }
 
+
+#container {
+  height: 100%;
+  .chatdiv {
+    // force to bottom of screen
+    position:absolute;
+    bottom: 0;
+
+    right: 20px; // force to right side
+  }
+}
+
 .discussion {
   list-style: none;
   background: #e5e5e5;
   margin: 0;
-  padding: 0 0 50px 0; // finality
+  padding: 0 0 0 0;
+  ol {
+    overflow-y: scroll; // let message scroll off the top
+    height: 300px;
+  }
   li {
     padding: 0.5rem;
     overflow: hidden;
@@ -67,6 +83,12 @@
       display: block; // triangle position
       width: 100%;
     }
+  }
+  input {
+    //display: table-row;
+    width: 98%;
+    height: 35px;
+    font-size: 100%;
   }
 }
 
