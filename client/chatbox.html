@@ -1,3 +1,11 @@
+<template name="user_list">
+  <ol>
+    {{#each squadmates}}
+      <li> <p>{{squadmate}}</p> </li>
+    {{/each}}
+  </ol>
+</template>
+
 <!-- https://css-tricks.com/replicating-google-hangouts-chat/ -->
 <template name="chatbox">
   <div class="chatdiv">

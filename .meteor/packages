@@ -10,3 +10,6 @@ insecure
 accounts-ui
 accounts-github
 fourseven:scss
+accounts-password
+mizzao:user-status
+accounts-testing

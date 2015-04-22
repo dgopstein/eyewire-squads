@@ -14,6 +14,21 @@ Template.chatbox.helpers({
 
 })
 
+Meteor.users.find({ "status.online": true }).observe({
+  added: function(id) {
+    console.log("came online: "+id);
+  },
+  removed: function(id) {
+    console.log("went offline: "+id);
+  }
+});
+
+Template.user_list.helpers({
+  squadmates: function() {
+    return Meteor.users.find({"status.online": true});
+  }
+})
+
 Template.input.events = {
   'keydown input#message' : function (event) {
     if (event.which == 13) { // 13 is the enter key event
