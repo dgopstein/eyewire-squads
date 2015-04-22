@@ -21,7 +21,6 @@ function start() {
     Session.set('ew_auth_code', auth_code);
   }
 
-  var ew_access_token = Session.get('ew_access_token');
   var ew_auth_code = Session.get('ew_auth_code');
   console.log('ew_auth_code: ', ew_auth_code);
 
@@ -40,12 +39,12 @@ function start() {
       grant_type: 'authorization_code'
     }, function(response) {
       console.log("exchange response: ", response);
-      Session.set('ew_access_token', response.access_token);
       ew_access_token = response.access_token;
       console.log("ew_access_token", ew_access_token);
 
       $.get(ewUrl + "2.0/account?access_token="+ew_access_token, function (response) {
         console.log("account: ", response);
+        Session.set('username', response.username);
       });
     })
   }
