@@ -32,6 +32,7 @@ function loginUser(username) {
 
 function start() {
   var ewUrl = 'https://beta.eyewire.org/'
+  //var ewUrl = 'https://eyewire.org/'
   
   // Set oauth code from URL
   auth_code = getUrlParameter('code');
