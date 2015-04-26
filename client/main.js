@@ -4,7 +4,8 @@ function addUserToSquad(username, squadname) {
   var user = getOrCreateUser(username)
 
   Session.set("squadname", squadname);
-  Meteor.users.update(user, {$set: {squadname: squadname}}, function(res) {console.log('updating user with squadname: ', res)});
+  console.log("adding user [", username, "] to squad: ", squadname)
+  Squads.upsert(username, {$set: {username: username, squadname: squadname}}, function(res) {console.log('updating user with squadname: ', res)});
 }
 
 function getUrlParameter(sParam)
@@ -60,10 +61,10 @@ function start() {
   console.log('ew_auth_code: ', ew_auth_code);
 
   var usernameParam = getUrlParameter('username');
-  //squadname = getUrlParameter('squad');
+  squadname = getUrlParameter('squad');
   if (usernameParam) {
     getOrCreateUser(usernameParam);
-    //addUserToSquad(usernameParam, squadname);
+    addUserToSquad(usernameParam, squadname);
   } else {
     // Send user to oauth endpoint to login
     if (typeof(ew_access_token) === 'undefined') {
@@ -87,7 +88,7 @@ function start() {
           console.log("account: ", response);
           var username = response.username;
           var mUser = getOrCreateUser(username);
-          //addUserToSquad(username, squadname);
+          addUserToSquad(username, squadname);
           console.log("meteor user: ", mUser);
         });
       })

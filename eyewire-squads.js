@@ -21,7 +21,7 @@ if (Meteor.isServer) {
   });
 
   Meteor.publish("userStatus", function() {
-    return Meteor.users.find({ "status.online": true });//, { fields: ['squadname'] });
+    return Meteor.users.find({ "status.online": true })//, { fields: {username: 1, squadname: 0 }});
   });
   
   //Meteor.publish("online-users", function(){

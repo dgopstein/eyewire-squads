@@ -27,7 +27,8 @@ Meteor.users.find({ "status.online": true}).observe({
 
 Template.user_list.helpers({
   squadmates: function() {
-    return Meteor.users.find({"status.online": true});
+    //return Meteor.users.find({"status.online": true});
+    return Squads.find({"squadname": Session.get("squadname")});
   }
 });
 

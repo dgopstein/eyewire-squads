@@ -2,7 +2,10 @@
   USER LIST
   <ol>
     {{#each squadmates}}
-      <div class="user">{{username}}</div>
+      <div>
+        <span class="user">{{username}}</span>
+        <span class="user">{{squadname}}</span>
+      </div>
     {{/each}}
   </ol>
 </template>
