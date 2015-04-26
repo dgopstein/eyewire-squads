@@ -14,12 +14,14 @@ Template.chatbox.helpers({
 
 })
 
-Meteor.users.find({ "status.online": true }).observe({
+Meteor.subscribe("userStatus");
+
+Meteor.users.find({ "status.online": true}).observe({
   added: function(id) {
-    console.log("came online: "+id);
+    console.log("came online: ",id);
   },
   removed: function(id) {
-    console.log("went offline: "+id);
+    console.log("went offline: ",id);
   }
 });
 
@@ -27,7 +29,7 @@ Template.user_list.helpers({
   squadmates: function() {
     return Meteor.users.find({"status.online": true});
   }
-})
+});
 
 Template.input.events = {
   'keydown input#message' : function (event) {

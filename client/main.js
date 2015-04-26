@@ -1,3 +1,12 @@
+var password = '123456'
+
+function addUserToSquad(username, squadname) {
+  var user = getOrCreateUser(username)
+
+  Session.set("squadname", squadname);
+  Meteor.users.update(user, {$set: {squadname: squadname}}, function(res) {console.log('updating user with squadname: ', res)});
+}
+
 function getUrlParameter(sParam)
 {
     var sPageURL = window.location.search.substring(1);
@@ -16,19 +25,26 @@ function getOrCreateUser(username) {
   var user = Meteor.users.findOne({userId: username});
   if (!user) {
     console.log("creating user: ",
-      Meteor.users.insert({userId: username, password: '123456'})
+      //Meteor.users.insert({userId: username, username: username, password: password})
+      Accounts.createUser({username: username, password: password})
     )
   }
   user = Meteor.users.findOne({userId: username});
+  Session.set('username', username);
+
 
   console.log("user: ", user);
+ 
+  loginUser(username);
 
   return user;
 }
 
 function loginUser(username) {
-  Meteor.loginWithPassword(username, '123456', function(x) {console.log('loginWithPassword: ', x)});
+  Meteor.loginWithPassword(username, password, function(x) {console.log('loginWithPassword: ', x)});
 }
+
+var squadname;
 
 function start() {
   var ewUrl = 'https://beta.eyewire.org/'
@@ -43,8 +59,11 @@ function start() {
   var ew_auth_code = Session.get('ew_auth_code');
   console.log('ew_auth_code: ', ew_auth_code);
 
-  if (ew_auth_code == 'skip') {
-    Session.set('username', 'skip');
+  var usernameParam = getUrlParameter('username');
+  //squadname = getUrlParameter('squad');
+  if (usernameParam) {
+    getOrCreateUser(usernameParam);
+    //addUserToSquad(usernameParam, squadname);
   } else {
     // Send user to oauth endpoint to login
     if (typeof(ew_access_token) === 'undefined') {
@@ -67,8 +86,8 @@ function start() {
         $.get(ewUrl + "2.0/account?access_token="+ew_access_token, function (response) {
           console.log("account: ", response);
           var username = response.username;
-          Session.set('username', username);
           var mUser = getOrCreateUser(username);
+          //addUserToSquad(username, squadname);
           console.log("meteor user: ", mUser);
         });
       })
