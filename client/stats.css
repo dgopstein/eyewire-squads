@@ -7,7 +7,7 @@
   max-width: 800px; 
   width: 100%; 
   margin: 0 auto;
-  border: 1px solid black;
+  /* border: 1px solid black; */
   border-radius: 10px;
   padding: 10px;
 }
@@ -17,7 +17,7 @@
 }
 .col1, .col2 { 
   display: inline-block;
-  vertical-align: top;
+  vertical-align: bottom;
   /*border: 1px solid black;
   background: #ccc;*/
   letter-spacing: normal;
@@ -36,9 +36,21 @@
   width: 50px;
   margin-left: auto;
   margin-right: auto;
+  margin: 10px auto;
 }
 
 img#dendrite {
+  width: 100%;
+}
+
+.centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+#points-text {
   width: 100%;
 }
 
@@ -49,4 +61,50 @@ img#dendrite {
   text-align: center;
 
   font-size: .75em;
+}
+
+#squad-name {
+  margin-top: 30px;
+  margin-bottom: 10px;
+  font-size: 2em;
+}
+
+#squadmates {
+  width: 100%;
+
+  float: inline;
+  margin: 5px 5px 5px 5px;
+}
+
+.user {
+  /*display: block;*/
+  float: left;
+  width: 45%; 
+  border: 1px solid black;
+
+  margin-left: auto;
+  margin-right: auto;
+  margin: 5px 5px 5px 5px;
+}
+
+.user span {
+  padding: 10px 5px 10px 5px;
+}
+
+.online {
+}
+
+.offline {
+  background-color: #ccc;
+}
+/*
+.offline:after {
+  background-color: #ccc;
+  position: absolute;
+  height: 15px;
+  top: 40px;
+}
+*/
+
+.username {
 }

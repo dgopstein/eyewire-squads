@@ -26,9 +26,16 @@ Meteor.users.find({ "status.online": true}).observe({
 });
 
 Template.user_list.helpers({
+  squadname: function() { return decodeURIComponent(Session.get("squadname")) },
   squadmates: function() {
     //return Meteor.users.find({"status.online": true});
-    return Squads.find({"squadname": Session.get("squadname")});
+    return Squads.find({"squadname": Session.get("squadname")}).fetch().map(function(squad){
+      var username = squad.username;
+      console.log("squad.username: '"+ username+ "'");
+      var user = Meteor.users.find({username: username}).fetch();
+      squad['onlineClass'] = user && user[0] && user[0]['status'] && user[0]['status'].online ? 'online' : 'offline';
+      return squad;
+    });
   }
 });
 

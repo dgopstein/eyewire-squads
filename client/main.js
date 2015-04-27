@@ -58,7 +58,7 @@ function start() {
   }
 
   var ew_auth_code = Session.get('ew_auth_code');
-  console.log('ew_auth_code: ', ew_auth_code);
+  //console.log('ew_auth_code: ', ew_auth_code);
 
   var usernameParam = getUrlParameter('username');
   squadname = getUrlParameter('squad');
