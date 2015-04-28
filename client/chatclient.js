@@ -7,7 +7,9 @@ var nMessageDefault = 3;
 Template.chatbox.helpers({
     messages: function() {
         var lim = Session.get('nMessages') || nMessageDefault;
-        var msgs = Messages.find({}, { sort: { time: -1}, limit: lim }).fetch().reverse();
+
+        var squadmates = Squads.find({"squadname": Session.get("squadname")}).fetch().map(function(squad){ return squad.username });
+        var msgs = Messages.find({name: {$in: squadmates }}, { sort: { time: -1}, limit: lim }).fetch().reverse();
         return msgs;
     }
 
