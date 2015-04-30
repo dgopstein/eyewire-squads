@@ -61,7 +61,12 @@ Template.user_list.helpers({
       //console.log("squad.username: '"+ username+ "'");
       var user = Meteor.users.find({username: username}).fetch();
       squad['onlineClass'] = user && user[0] && user[0]['status'] && user[0]['status'].online ? 'online' : 'offline';
+      squad['userPoints'] = userDiff(squad).points;
       return squad;
+    }).sort(function(a,b) {
+      if (a.userPoints > b.userPoints) { return -1;
+      } else if(a.userPoints < b.userPoints) { return 1;
+      } else {return 0; }
     });
   }
 });

@@ -67,19 +67,22 @@ function diffForevs(a, b) {
   return res;
 }
 
+// What has the player done since joining the squad?
+function userDiff(user) {
+  var firstForever = sanitizeAccuracy(user.forevers[0]);
+  var lastForever = sanitizeAccuracy(user.forevers[user.forevers.length-1]);
+  console.log('first last', [firstForever, lastForever]);
+
+  var diff = diffForevs(lastForever, firstForever);
+
+  return diff;
+}
+
 function getStats() {
   var squadmates = getSquadmates();
 
   console.log('squadmates: ', squadmates.fetch());
-  var stats = sumForevs(squadmates.map(function (user) {
-    var firstForever = sanitizeAccuracy(user.forevers[0]);
-    var lastForever = sanitizeAccuracy(user.forevers[user.forevers.length-1]);
-    console.log('first last', [firstForever, lastForever]);
-
-    var diff = diffForevs(lastForever, firstForever);
-
-    return diff;
-  }));
+  var stats = sumForevs(squadmates.map(userDiff));
   
   return stats;
 }
