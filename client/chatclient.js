@@ -4,13 +4,24 @@
 
 var nMessageDefault = 3;
 
+Template.stats.helpers({
+  squadPoints: function() { return getStats().points; }
+});
+
 Template.chatbox.helpers({
     messages: function() {
         var lim = Session.get('nMessages') || nMessageDefault;
 
-        var squadmates = Squads.find({"squadname": Session.get("squadname")}).fetch().map(function(squad){ return squad.username });
+        var squadmates = getSquadmates().map(function(squad){ return squad.username });
         var msgs = Messages.find({name: {$in: squadmates }}, { sort: { time: -1}, limit: lim }).fetch().reverse();
-        return msgs;
+        var updatedMsgs = msgs.map(function (msg) {
+          //msgs.timeStr = (new Date(msgs.time)).format('HH:MM:SS')
+          newMsg = jsonDup(msg);
+          newMsg.timeStr = moment(msg.time).format('h:mm a');
+          return newMsg;
+        });
+        console.log('updatedMsgs: ', updatedMsgs);
+        return updatedMsgs;
     }
 
 
@@ -31,9 +42,9 @@ Template.user_list.helpers({
   squadname: function() { return decodeURIComponent(Session.get("squadname")) },
   squadmates: function() {
     //return Meteor.users.find({"status.online": true});
-    return Squads.find({"squadname": Session.get("squadname")}).fetch().map(function(squad){
+    return getSquadmates().map(function(squad){
       var username = squad.username;
-      console.log("squad.username: '"+ username+ "'");
+      //console.log("squad.username: '"+ username+ "'");
       var user = Meteor.users.find({username: username}).fetch();
       squad['onlineClass'] = user && user[0] && user[0]['status'] && user[0]['status'].online ? 'online' : 'offline';
       return squad;

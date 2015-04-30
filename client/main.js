@@ -1,11 +1,50 @@
+
+var client_id = 5;
 var password = '123456'
 
-function addUserToSquad(username, squadname) {
-  var user = getOrCreateUser(username)
+function pushForever(username, stats) {
+  var forever = jsonDup(stats.forever);
+  var accuracy = jsonDup(stats.last.accuracy);
+  forever.accuracy = accuracy
+  forever.time = Date.now();
+  Squads.upsert(username, {$push: {forevers: forever}}, function(res) {console.log('updating user with forevers: ', res)});
+}
 
+function getUserStats(username, callback) {
+  //http://eyewire.org/1.0/player/tiffanymariko/stats
+  $.get('http://eyewire.org/1.0/player/'+username+'/stats', function (response) {
+    if (typeof(callback) !== 'undefined') { callback(response) }
+  });
+}
+getUserStats('dgopstein', function(res) { console.log("dgopstein stats: ", res)});
+
+function updateUserStats(username, callback) {
+  getUserStats(username, function (response) {
+    pushForever(username, response);
+    console.log("playerScore: ", response);
+    if (callback) { callback(response) }
+  });
+}
+
+function updateStats() {
+  //var squadmates = getSquadmates().fetch;
+
+  //squadmates.forEach(function (user) {
+  //  updateUserStats(user.username, drawStats);
+  //});
+
+  // You only accrue stats while you're logged into the site
+  updateUserStats(Session.get("username"));//, drawStats);
+}
+
+window.setInterval(updateStats, 10000);
+
+function addUserToSquad(username, squadname) {
   Session.set("squadname", squadname);
   console.log("adding user [", username, "] to squad: ", squadname)
   Squads.upsert(username, {$set: {username: username, squadname: squadname}}, function(res) {console.log('updating user with squadname: ', res)});
+
+  updateUserStats(username);//, drawStats);
 }
 
 function getUrlParameter(sParam)
@@ -22,15 +61,20 @@ function getUrlParameter(sParam)
     }
 }    
 
+function getUser(username) {
+  var user = Meteor.users.findOne({username: username});
+  return user;
+}
+
 function getOrCreateUser(username) {
-  var user = Meteor.users.findOne({userId: username});
+  console.log("getOrCreate: '"+username+"'");
+  var user = getUser(username);
+  console.log("looked up user: ", user)
   if (!user) {
-    console.log("creating user: ",
-      //Meteor.users.insert({userId: username, username: username, password: password})
-      Accounts.createUser({username: username, password: password})
-    )
+    user = Accounts.createUser({userId: username, username: username, password: password});
+    console.log("creatied user: ", user)
   }
-  user = Meteor.users.findOne({userId: username});
+  console.log("found user: ", user)
   Session.set('username', username);
 
 
@@ -38,7 +82,9 @@ function getOrCreateUser(username) {
  
   loginUser(username);
 
-  return user;
+  addUserToSquad(username, squadname);
+
+  return username;
 }
 
 function loginUser(username) {
@@ -58,18 +104,17 @@ function start() {
   }
 
   var ew_auth_code = Session.get('ew_auth_code');
-  //console.log('ew_auth_code: ', ew_auth_code);
+  console.log('ew_auth_code: ', ew_auth_code);
 
   var usernameParam = getUrlParameter('username');
   squadname = getUrlParameter('squad');
   if (usernameParam) {
-    getOrCreateUser(usernameParam);
-    addUserToSquad(usernameParam, squadname);
+    var user = getOrCreateUser(usernameParam);
   } else {
     // Send user to oauth endpoint to login
     if (typeof(ew_access_token) === 'undefined') {
       if (typeof(ew_auth_code) === 'undefined') {
-        window.location = ewUrl + 'oauth2/1.0/auth?response_type=code&redirect_uri=http://eyewire-squads.herokuapp.com&client_id=4'
+        window.location = ewUrl + 'oauth2/1.0/auth?response_type=code&redirect_uri=http://eyewire-squads.herokuapp.com&client_id='+client_id;
       }
   
       // Exchange their auth code for an access token
@@ -77,7 +122,7 @@ function start() {
         auth_code: ew_auth_code,
         secret: 'M85MQeIZMyshv1PKVlFe26Eh8SKoVZhZwi5Yq12i4l3mCS2DovFE6qQRLViaJSVq4ZCPdWjlx7oJcO8S3QdKGi349ntnamDS3ZPUFnRUDJ5eZgjf0MM+QHaY+wOKBpkRpAXI8X8Tpo7VD5yqTqjt2VTL4U40UjkuNtFGoiRFdfw=',
         redirect_uri: 'http://eyewire-squads.herokuapp.com',
-        client_id: 4,
+        client_id: client_id,
         grant_type: 'authorization_code'
       }, function(response) {
         console.log("exchange response: ", response);
@@ -87,8 +132,7 @@ function start() {
         $.get(ewUrl + "2.0/account?access_token="+ew_access_token, function (response) {
           console.log("account: ", response);
           var username = response.username;
-          var mUser = getOrCreateUser(username);
-          addUserToSquad(username, squadname);
+          var mUser = getOrCreateUser(username, squadname);
           console.log("meteor user: ", mUser);
         });
       })
@@ -99,3 +143,4 @@ function start() {
 }
 
 Meteor.startup(start);
+
