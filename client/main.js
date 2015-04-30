@@ -16,23 +16,16 @@ function getUserStats(username, callback) {
     if (typeof(callback) !== 'undefined') { callback(response) }
   });
 }
-getUserStats('dgopstein', function(res) { console.log("dgopstein stats: ", res)});
 
 function updateUserStats(username, callback) {
   getUserStats(username, function (response) {
     pushForever(username, response);
-    console.log("playerScore: ", response);
+    //console.log("playerScore: ", response);
     if (callback) { callback(response) }
   });
 }
 
 function updateStats() {
-  //var squadmates = getSquadmates().fetch;
-
-  //squadmates.forEach(function (user) {
-  //  updateUserStats(user.username, drawStats);
-  //});
-
   // You only accrue stats while you're logged into the site
   updateUserStats(Session.get("username"));//, drawStats);
 }
@@ -41,8 +34,9 @@ window.setInterval(updateStats, 10000);
 
 function addUserToSquad(username, squadname) {
   Session.set("squadname", squadname);
-  console.log("adding user [", username, "] to squad: ", squadname)
-  Squads.upsert(username, {$set: {username: username, squadname: squadname}}, function(res) {console.log('updating user with squadname: ', res)});
+  //console.log("adding user [", username, "] to squad: ", squadname)
+  Squads.upsert(username, {$set: {username: username, squadname: squadname}});//,
+//function(res) {//console.log('updating user with squadname: ', res)});
 
   updateUserStats(username);//, drawStats);
 }
@@ -67,18 +61,18 @@ function getUser(username) {
 }
 
 function getOrCreateUser(username) {
-  console.log("getOrCreate: '"+username+"'");
+  //console.log("getOrCreate: '"+username+"'");
   var user = getUser(username);
-  console.log("looked up user: ", user)
+  //console.log("looked up user: ", user)
   if (!user) {
     user = Accounts.createUser({userId: username, username: username, password: password});
-    console.log("creatied user: ", user)
+    //console.log("creatied user: ", user)
   }
-  console.log("found user: ", user)
+  //console.log("found user: ", user)
   Session.set('username', username);
 
 
-  console.log("user: ", user);
+  //console.log("user: ", user);
  
   loginUser(username);
 
@@ -104,7 +98,7 @@ function start() {
   }
 
   var ew_auth_code = Session.get('ew_auth_code');
-  console.log('ew_auth_code: ', ew_auth_code);
+  //console.log('ew_auth_code: ', ew_auth_code);
 
   var usernameParam = getUrlParameter('username');
   squadname = getUrlParameter('squad');
@@ -125,12 +119,12 @@ function start() {
         client_id: client_id,
         grant_type: 'authorization_code'
       }, function(response) {
-        console.log("exchange response: ", response);
+        //console.log("exchange response: ", response);
         ew_access_token = response.access_token;
-        console.log("ew_access_token", ew_access_token);
+        //console.log("ew_access_token", ew_access_token);
   
         $.get(ewUrl + "2.0/account?access_token="+ew_access_token, function (response) {
-          console.log("account: ", response);
+          //console.log("account: ", response);
           var username = response.username;
           var mUser = getOrCreateUser(username, squadname);
           console.log("meteor user: ", mUser);

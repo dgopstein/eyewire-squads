@@ -5,7 +5,21 @@
 var nMessageDefault = 3;
 
 Template.stats.helpers({
-  squadPoints: function() { return getStats().points; }
+  squadPoints: function() { return getStats().points; },
+  cubesCompleted: function() { return getStats().cubes; },
+  cubeSpeed: function() {
+    var stats = getStats();
+
+    var minutes = stats.time/(60*1000);
+    var hours = minutes / 60;
+
+    return (stats.cubes / hours).toFixed(2);
+  },
+  positivityRatio: function() {
+    var stats = getStats();
+    console.log("posi stats: ", stats);
+    return (100 * stats.accuracy.tp / (stats.accuracy.tp + stats.accuracy.fp)).toFixed(0);
+  },
 });
 
 Template.chatbox.helpers({
@@ -20,7 +34,7 @@ Template.chatbox.helpers({
           newMsg.timeStr = moment(msg.time).format('h:mm a');
           return newMsg;
         });
-        console.log('updatedMsgs: ', updatedMsgs);
+        //console.log('updatedMsgs: ', updatedMsgs);
         return updatedMsgs;
     }
 
@@ -31,10 +45,10 @@ Meteor.subscribe("userStatus");
 
 Meteor.users.find({ "status.online": true}).observe({
   added: function(id) {
-    console.log("came online: ",id);
+    //console.log("came online: ",id);
   },
   removed: function(id) {
-    console.log("went offline: ",id);
+    //console.log("went offline: ",id);
   }
 });
 
