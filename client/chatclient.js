@@ -17,7 +17,7 @@ Template.stats.helpers({
   },
   positivityRatio: function() {
     var stats = getStats();
-    console.log("posi stats: ", stats);
+    //console.log("posi stats: ", stats);
     return (100 * stats.accuracy.tp / (stats.accuracy.tp + stats.accuracy.fp)).toFixed(0);
   },
 });

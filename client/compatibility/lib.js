@@ -39,7 +39,7 @@ function sumForevs(fArr) {
     time: 0,
   };
   
-  console.log("forevsfArr: ", fArr);
+  //console.log("forevsfArr: ", fArr);
   fArr.forEach(function (forev) {
     stats.points += parseInt(forev.points);
     stats.cubes += parseInt(forev.cubes);
@@ -53,7 +53,7 @@ function sumForevs(fArr) {
 }
 
 function diffForevs(a, b) {
-  console.log('a b: ', [a, b]);
+  //console.log('a b: ', [a, b]);
   var res = jsonDup(a);
   res.points -= parseInt(b.points);
   res.cubes  -= parseInt(b.cubes);
@@ -62,7 +62,7 @@ function diffForevs(a, b) {
   res.accuracy.fp = parseInt(b.accuracy.fp);
   res.accuracy.fn = parseInt(b.accuracy.fn);
   res.time -= b.time;
-  console.log('res: ', res);
+  //console.log('res: ', res);
   
   return res;
 }
@@ -71,7 +71,7 @@ function diffForevs(a, b) {
 function userDiff(user) {
   var firstForever = sanitizeAccuracy(user.forevers[0]);
   var lastForever = sanitizeAccuracy(user.forevers[user.forevers.length-1]);
-  console.log('first last', [firstForever, lastForever]);
+  //console.log('first last', [firstForever, lastForever]);
 
   var diff = diffForevs(lastForever, firstForever);
 

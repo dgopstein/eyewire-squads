@@ -1,3 +1,12 @@
+html {
+    padding: 10px;
+    font-family: Verdana, sans-serif;
+}
+
+.sidebar {
+  width: 320px;
+}
+
 .grid * {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
