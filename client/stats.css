@@ -81,19 +81,16 @@ img#dendrite {
 #squadmates {
   width: 100%;
 
-  float: inline;
-  margin: 5px 5px 5px 5px;
+  margin: 5px 0px 5px 10px;
 }
 
 .user {
   /*display: block;*/
-  float: left;
-  width: 45%; 
+  width: 100%; 
   border: 1px solid black;
 
-  margin-left: auto;
-  margin-right: auto;
-  margin: 5px 5px 5px 5px;
+  margin-bottom: 5px;
+  padding: 10px 0px 10px 0px;
 }
 
 .user span {
